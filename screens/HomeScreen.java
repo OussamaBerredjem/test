@@ -29,11 +29,6 @@ public class HomeScreen extends JPanel {
     private String[] adresses = {"Alger", "Oran", "Constantine", "Tizi Ouzou", "Annaba"};
     private String[] sexes = {"Male", "Female"};
 
-
-    private String[] head = {"Nom", "Prenom", "Adress", "Sexe"};
-
-
-
     private Random random = new Random();
     // Use ArrayList for header columns
     private List<String> header = new ArrayList<>();
@@ -82,26 +77,6 @@ public class HomeScreen extends JPanel {
 
         autoSave.addItemListener(e -> handleRadioButtonSelection());
         manualSave.addItemListener(e -> handleRadioButtonSelection());
-
-        group.add(autoSave);
-        group.add(manualSave);
-
-        file.add(newItem);
-        file.add(openItem);
-        file.add(closeItem);
-
-        editor.add(autoSave);
-        editor.add(manualSave);
-
-        view.add(nom);
-        view.add(prenom);
-        view.add(adress);
-        view.add(sexe);
-
-        menu.add(file);
-        menu.add(editor);
-        menu.add(view);
-
 
         nom.addItemListener(e -> {
             if (e.getStateChange() != ItemEvent.SELECTED) {
@@ -171,6 +146,25 @@ public class HomeScreen extends JPanel {
             buildCenterPanel();
         });
 
+        group.add(autoSave);
+        group.add(manualSave);
+
+        file.add(newItem);
+        file.add(openItem);
+        file.add(closeItem);
+
+        editor.add(autoSave);
+        editor.add(manualSave);
+
+        view.add(nom);
+        view.add(prenom);
+        view.add(adress);
+        view.add(sexe);
+
+        menu.add(file);
+        menu.add(editor);
+        menu.add(view);
+
         return menu;
     }
 
@@ -187,38 +181,25 @@ public class HomeScreen extends JPanel {
             remove(center);
         }
 
-
-
-
-
-
         center = new JPanel();
+        DefaultTableModel model = new DefaultTableModel(header.toArray(new String[0]), 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
-
-        DefaultTableModel model = new DefaultTableModel(head, 0);
-
-        
-        model.addRow(noms);
-        
+        for (Map<String, String> r : dataList) {
+            String[] row = new String[header.size()];
+            for (int i = 0; i < header.size(); i++) {
+                row[i] = r.get(header.get(i).toLowerCase());
+            }
+            model.addRow(row);
+        }
 
         JTable table = new JTable(model);
-
-
-
         center.add(new JScrollPane(table));
-
-
-
-
-
-
-
-
-
-
-
-
-
+        add(center, BorderLayout.CENTER);
 
         revalidate();
         repaint();
